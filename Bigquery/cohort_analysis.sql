@@ -1,7 +1,7 @@
 with orders as (
   select 
       *,
-      date(date_trunc(created_at,month)) as order_created_month,
+      date(date_trunc(created_at,month)) as order_created_period,
       min(date(date_trunc(created_at,month))) over (partition by user_id order by created_at) as first_purchase_period,
       row_number() over (partition by user_id order by created_at) as customer_orders
   from `bigquery-public-data.thelook_ecommerce.orders`
@@ -23,7 +23,7 @@ cohort_revenue as (
 
     select
         first_purchase_period,
-        date_diff(order_created_month,first_purchase_period,month) as purchase_month,
+        date_diff(order_created_period,first_purchase_period,month) as purchase_period,
         count(distinct user_id) as retained_customers        
     from orders
     group by 1,2
