@@ -7,7 +7,7 @@ with orders as (
   from `bigquery-public-data.thelook_ecommerce.orders`
 ),
 
-monthly_cohort_size as (
+cohort_size as (
 
     select
         first_purchase_month,
@@ -32,9 +32,9 @@ cohort_revenue as (
 
 select 
     cohort_revenue.*,
-    monthly_cohort_size.customers
+    cohort_size.customers
 
 from cohort_revenue
-left join monthly_cohort_size
-    on cohort_revenue.first_purchase_month = monthly_cohort_size.first_purchase_month
+left join cohort_size
+    on cohort_revenue.first_purchase_month = cohort_size.first_purchase_month
 order by 1,2
